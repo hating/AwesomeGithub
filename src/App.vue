@@ -44,8 +44,10 @@
         </div>
       <footer>
         <div class="wrap">
-          <div>此站由 <a href="https://www.zhihu.com/people/peng-jia-jin/answers" target="_blank">彭家进</a>构建。源码已分享至Github，欢迎Star与Fork。</div>
-          <div>This site is craft by <a href="https://github.com/hating" target="_blank">Hating</a> Using Vue.js and ElementUI.<br />You can fork this project on Github.</div>
+          <div>此站由 <a href="https://www.zhihu.com/people/peng-jia-jin/answers" target="_blank">彭家进</a>构建。源码已分享至 <a
+                  href="https://github.com/hating/AwsomeGithub" target="_blank">Github</a>，欢迎Star与Fork。</div>
+          <div>This site is craft by <a href="https://github.com/hating" target="_blank">Hating</a> Using Vue.js and ElementUI.<br />You can fork this project on <a
+                  href="https://github.com/hating/AwsomeGithub" target="_blank">Github</a>.</div>
         </div>
       </footer>
     </div>

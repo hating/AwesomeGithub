@@ -1,6 +1,9 @@
-# awsome-github
+# Awsome-Github
 
 > This project presents the real-time Github ranking.
+
+# Demo
+![](http://i1.piimg.com/567571/1054248260ff6086.jpg)
 
 ## Build Setup
 
