@@ -2,7 +2,7 @@
     <div id="app">
         <header>
             <div><img src="./assets/awsomegithub.png" height="150" width="150"/></div>
-            <h1 class="title">Awsome Github</h1>
+            <h1 class="title">Awesome Github</h1>
             <div class="sub-title">
                 <div>展示实时的Github排名。</div>
                 <div>Presenting the real-time Github Ranking.</div>
@@ -54,6 +54,13 @@
 </template>
 
 <script>
+    import image from "./assets/cat.jpg";
+    function lazyBackground() {// 背景图片懒加载，找不到好的办法，只能CDN Lazy loading background image
+
+        let body = document.body;
+        body.style.backgroundImage = "url("+image+")";
+    }
+    setTimeout(lazyBackground,0);
     export default {
         name: 'app',
     }
@@ -71,8 +78,6 @@
     }
 
     body {
-      margin: 0 auto;
-      background-image: url("assets/cat.jpg");
       background-attachment: fixed;
       background-repeat: round;
       background-color: #bdb9b9;

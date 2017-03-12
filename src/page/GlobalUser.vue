@@ -1,5 +1,5 @@
 <template>
-        <user v-bind:query="query"></user>
+        <user v-bind:query="query" :type="type"></user>
 </template>
 
 <script>
@@ -8,11 +8,12 @@
         name: 'app',
         data(){
             return {
-                query:'https://api.github.com/search/users?q=followers:%3E1000&sort=followers&order:desc' //查询全球用户排名 query of global ranking.
+                query: 'https://api.github.com/search/users?q=followers:%3E1000&sort=followers&order:desc', //查询全球用户排名 query of global ranking.
+                type: "Global"
             }
         },
         components: {
-            "user":User,
+            "user": User,
         }
     }
 </script>

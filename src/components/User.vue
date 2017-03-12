@@ -57,54 +57,82 @@
         bio: "AwsomeGithub的创造者，读取完排名我就消失了。Author of \nAwsomeGithub.I will disappear when asynchronous transfer \nis done.",
         html_url: 'https://github.com/hating',
         followers: '(●\'◡\'●)'
-    },];
-    function query(q) {
-        Message("正在调用Github API Invoking Github API");
-        console.log(q);
-        axios.get(q)// 根据条件获得用户排名，以后可以封装起来 Ranking users according to query,may capsule in the future.
-            .then(function (response) {
-                while (tableData.length > 0) {// 清空tableData原有数据 Clear tableData origin Data
+    }];
+
+    function query(q,type) {
+        while (tableData.length > 0) {// 清空tableData原有数据 Clear tableData origin Data
+            tableData.pop();
+        }
+        let stored = false;// 是否有本地缓存的标签 Check if there are localStorage
+        let local = null;
+        local = localStorage.getItem(type + "tableData");
+        let time = localStorage.getItem(type + "Date");
+        let timepass = Date.now() - time;
+        let isValidate = ((1000 * 60*5 - timepass) > 0) ? true : false;
+        if (local !== null && isValidate) {
+            let localData = JSON.parse(local);
+            if (localData.length == 30) {
+                stored = true;
+                Message("从本地缓存调用 Loading ranking from localStorage");
+                while (tableData.length > 0) {
                     tableData.pop();
                 }
-                response.data.items.forEach(function (elem, index) {
-                    axios.get(elem.url)
-                        .then(
-                            function (response) {
-                                let temp = {
-                                    ranking: index + 1,// 用户排名 User ranking
-                                    login: elem.login,//用户登陆名 User login name
-                                    html_url: elem.html_url,//用户主页 User main page
-                                    name: response.data.name,//用户名 Username
-                                    company: response.data.company,//公司 company
-                                    location: response.data.location,//地域 location
-                                    email: response.data.email,//邮箱地址 email
-                                    bio: response.data.bio === null ? null:response.data.bio.replace(/(.{60})/g,"$1\n"),//个人描述，正则用于分行 biography, the RegExp is used to split lines.
-                                    public_repos: response.data.public_repos,//公开仓库数量 The amount of public repositories
-                                    followers: response.data.followers //关注者数量 The amount of followers
-                                };
-                                tableData.push(temp);
-                                tableData.sort((x, y) => x.ranking - y.ranking);// 根据排名排序是最正确的，无奈之举，splice效果不好 Sorting items in order of ranking.
-                            })
-//                        ).catch(function () {
-//                        Message.error("API调用次数过多，请过几秒再试 The Github API is responding 403");
-//                    });
+                localData.forEach(function (elem) {
+                    tableData.push(elem);
+                })
+            }
+        }
+        if(!stored){
+            Message("正在调用Github API Invoking Github API");
+            axios.get(q)// 根据条件获得用户排名，以后可以封装起来 Ranking users according to query,may capsule in the future.
+                .then(function (response) {
+//                    while (tableData.length > 0) {// 清空tableData原有数据 Clear tableData origin Data
+//                        tableData.pop();
+//                    }
+                    response.data.items.forEach(function (elem, index) {
+                        axios.get(elem.url)
+                            .then(
+                                function (response) {
+                                    let temp = {
+                                        ranking: index + 1,// 用户排名 User ranking
+                                        login: elem.login,//用户登陆名 User login name
+                                        html_url: elem.html_url,//用户主页 User main page
+                                        name: response.data.name,//用户名 Username
+                                        company: response.data.company,//公司 company
+                                        location: response.data.location,//地域 location
+                                        email: response.data.email,//邮箱地址 email
+                                        bio: response.data.bio === null ? null:response.data.bio.replace(/(.{60})/g,"$1\n"),//个人描述，正则用于分行 biography, the RegExp is used to split lines.
+                                        public_repos: response.data.public_repos,//公开仓库数量 The amount of public repositories
+                                        followers: response.data.followers //关注者数量 The amount of followers
+                                    };
+                                    tableData.push(temp);
+                                    tableData.sort((x, y) => x.ranking - y.ranking);// 根据排名排序是最正确的，无奈之举，splice效果不好 Sorting items in order of ranking.
+                                    if (tableData.length == 30) {
+                                        localStorage.setItem(type + "tableData", JSON.stringify(tableData));
+                                        localStorage.setItem(type + "Date", Date.now());
+                                        stored = false;
+                                    }
+                                }
+                            ).catch(function () {
+                            Message.error("API调用次数过多，请过几秒再试 The Github API is responding 403");
+                        });
 
+                    });
+                }).then(function () {
+                Message.success("成功获取排名信息 Successfully getting ranking information");
+            })
+                .catch(function (error) {
+                    Message.error("API调用次数过多，请过几秒再试 The Github API is responding 403");
                 });
-            }).then(function () {
-            Message.success("成功获取排名信息 Successfully getting ranking information");
-        })
-            .catch(function (error) {
-                console.log(error);
-                Message.error("API调用次数过多，请过几秒再试 The Github API is responding 403");
-            });
+        }
     }
     export default {
         name: 'hello',
-        props:["query"],
+        props:["query","type"],
         data () {
-            query(this.query);
+            query(this.query,this.type);
             return {
-                tableData: tableData,
+                tableData: tableData
             }
         },
     }
