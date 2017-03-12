@@ -1,4 +1,4 @@
-# Awsome-Github
+# Awesome-Github
 
 > This project presents the real-time Github ranking.
 
